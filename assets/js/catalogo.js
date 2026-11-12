@@ -446,7 +446,7 @@ window.YADEA_FAQ = [
   },
   {
     q: `Quais são as formas de pagamento na ${LOJA}?`,
-    a: 'Oferecemos Pix, cartão de crédito (parcelamento sem juros em algumas opções), financiamento, carteira digital e consórcio (para modelos que exigem documentação).',
+    a: `${new Intl.ListFormat('pt-BR', { type: 'conjunction' }).format(CFG_LOJA.pagamento.formas)}.`,
   },
   {
     q: 'Vocês oferecem assistência técnica?',

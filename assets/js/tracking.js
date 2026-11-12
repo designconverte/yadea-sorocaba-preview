@@ -3,7 +3,7 @@
    --------------------------------------------------------------------------
    Cada evento sai por TRÊS caminhos ao mesmo tempo:
 
-     1. gtag  (GA4 no navegador)
+     1. gtag  (GA4 e Google Ads no navegador, sem GTM: IDs no <html>)
      2. fbq   (Pixel da Meta, só com consentimento de anúncio)
      3. /api/e.php  (endpoint próprio, que repassa para GA4 MP e Meta CAPI)
 
@@ -109,6 +109,34 @@
 
   const sessao = idSessao();
 
+  /* Destinos do Google, do <html> (vazios na prévia). Sem GTM em Sorocaba: a
+     gtag.js do <head> configura os dois e todo evento sem `send_to` vai para
+     ambos, como o PixelYourSite fazia. */
+  const { ga4: GA4 = '', aw: AW = '', awLead: AW_LEAD = '' } = document.documentElement.dataset;
+
+  /* Clique no WhatsApp: o nome que o WordPress usava (config.js, `medicao`)
+     sai junto, para o GA4 e o Ads continuarem recebendo o que já recebiam.
+     E, se o gestor criar uma conversão com rótulo no Google Ads
+     (`data-aw-lead`), ela sai também: é o jeito oficial de o Ads contar. */
+  function eventosHerdados(params) {
+    const M = window.YADEA_CONFIG?.medicao;
+    if (M) {
+      // "YADEA M6-H" → M6_H (o nome sem a marca, só letra, número e _).
+      const modelo = String(params.item_name || params.item_id || '')
+        .replace(params.item_brand || '', '').trim()
+        .replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+      const herdado = M.porOrigem?.[params.origem]
+        || (M.prefixoModelo && params.item_id && modelo ? `${M.prefixoModelo}${modelo}` : '');
+      if (herdado) window.gtag?.('event', herdado, params);
+    }
+    if (AW && AW_LEAD) {
+      window.gtag?.('event', 'conversion', {
+        send_to: `${AW}/${AW_LEAD}`,
+        ...(params.value ? { value: params.value, currency: params.currency } : {}),
+      });
+    }
+  }
+
   function evento(nome, params = {}, opcoes = {}) {
     const idEvento = novoIdEvento();
     const consent = consentimento();
@@ -121,14 +149,17 @@
        própria loja. */
     const { telefone, nome_lead, ...semDadoPessoal } = dados;
 
-    // 1. GA4 no navegador. Com consentimento negado o Consent Mode transforma
-    //    isto num ping sem cookie, que alimenta a modelagem do Google.
-    window.gtag?.('event', nome, semDadoPessoal);
+    // 1. Google no navegador (GA4 + Google Ads). Com consentimento negado o
+    //    Consent Mode transforma isto num ping sem cookie, que alimenta a
+    //    modelagem do Google.
+    window.gtag?.('event', nome, opcoes.somenteGa4 && GA4 ? { ...semDadoPessoal, send_to: GA4 } : semDadoPessoal);
 
-    /* Evento de segmentação para o GA4 e mais nada. Não vai para a Meta nem
-       para o log, porque a conversão daquele clique já saiu no `generate_lead`
-       que veio junto. Repetir aqui contaria duas vezes. */
+    /* Evento de segmentação para o GA4 e mais nada (`send_to` acima). Não vai
+       para o Ads, a Meta nem o log, porque a conversão daquele clique já saiu
+       no `generate_lead` que veio junto. Repetir aqui contaria duas vezes. */
     if (opcoes.somenteGa4) return;
+
+    if (nome === 'generate_lead') eventosHerdados(semDadoPessoal);
 
     // 2. Pixel da Meta, se houver consentimento e o evento interessar a ela.
     if (consent.ad && window.fbq && NOMES_META[nome]) {

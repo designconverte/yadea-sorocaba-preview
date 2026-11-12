@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-ga4="" data-meta-pixel="" data-sem-servidor="1">
+<html lang="pt-BR" data-ga4="" data-aw="" data-meta-pixel="" data-sem-servidor="1">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,10 +13,23 @@
 <link rel="icon" href="assets/img/brand/icone-app-laranja.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/brand/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/yadea.css?v=1.0.11">
+<link rel="stylesheet" href="assets/css/yadea.css?v=1.0.13">
 
-<script src="assets/js/consent.js?v=1.0.11"></script>
+<script src="assets/js/consent.js?v=1.0.13"></script>
 
+<script>
+  (function () {
+    var d = document.documentElement.dataset;
+    var ids = [d.ga4, d.aw].filter(Boolean);
+    if (!ids.length) return;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ids[0];
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    ids.forEach(function (id) { gtag('config', id); });
+  })();
+</script>
 
 <style>
   .legal { padding: calc(var(--yd-header) + var(--sp-12)) 0 var(--sp-16); }
@@ -134,7 +147,7 @@
 
       <h2>Com quem compartilhamos</h2>
       <ul>
-        <li><strong>Google</strong> (Tag Manager, Analytics e Ads), para entender a audiência do site e medir campanhas.
+        <li><strong>Google</strong> (Analytics e Ads), para entender a audiência do site e medir campanhas.
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Política do Google</a>.</li>
         <li><strong>Meta</strong> (Facebook e Instagram), quando a medição de campanhas da Meta estiver ativa.
           <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener">Política da Meta</a>.</li>
@@ -225,7 +238,7 @@
   </div>
 </div>
 
-<script src="assets/js/config.js?v=1.0.11"></script>
+<script src="assets/js/config.js?v=1.0.13"></script>
 <script>
   (function () {
     var cfg = window.YADEA_CONFIG;

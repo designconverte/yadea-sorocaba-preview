@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-ga4="" data-meta-pixel="" data-sem-servidor="1">
+<html lang="pt-BR" data-ga4="" data-aw="" data-aw-lead="" data-meta-pixel="" data-sem-servidor="1">
 <head>
 <meta charset="utf-8">
 <base href="../../">
@@ -30,7 +30,7 @@
 
 <link rel="preload" href="assets/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/img/models/m6-h-01.webp" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/yadea.css?v=1.0.11">
+<link rel="stylesheet" href="assets/css/yadea.css?v=1.0.13">
 
 
 <script>
@@ -40,19 +40,19 @@
   })(document.documentElement);
 </script>
 
-<script src="assets/js/consent.js?v=1.0.11"></script>
-
+<script src="assets/js/consent.js?v=1.0.13"></script>
 
 <script>
   (function () {
-    var id = document.documentElement.dataset.ga4;
-    if (!id) return;
+    var d = document.documentElement.dataset;
+    var ids = [d.ga4, d.aw].filter(Boolean);
+    if (!ids.length) return;
     var s = document.createElement('script');
     s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ids[0];
     document.head.appendChild(s);
     gtag('js', new Date());
-    gtag('config', id, { send_page_view: false });
+    ids.forEach(function (id) { gtag('config', id, { send_page_view: false }); });
   })();
 </script>
 
@@ -593,16 +593,16 @@
   <p class="lightbox__contador" id="lightbox-contador" aria-live="polite"></p>
 </div>
 
-<script src="assets/js/tracking.js?v=1.0.11"></script>
-<script src="assets/js/config.js?v=1.0.11"></script>
-<script src="assets/js/galerias.js?v=1.0.11"></script>
-<script src="assets/js/catalogo.js?v=1.0.11"></script>
-<script src="assets/js/render.js?v=1.0.11"></script>
-<script src="assets/js/app.js?v=1.0.11"></script>
+<script src="assets/js/tracking.js?v=1.0.13"></script>
+<script src="assets/js/config.js?v=1.0.13"></script>
+<script src="assets/js/galerias.js?v=1.0.13"></script>
+<script src="assets/js/catalogo.js?v=1.0.13"></script>
+<script src="assets/js/render.js?v=1.0.13"></script>
+<script src="assets/js/app.js?v=1.0.13"></script>
 
 <script src="assets/vendor/gsap.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/vendor/lenis.min.js" defer></script>
-<script src="assets/js/motion.js?v=1.0.11" defer></script>
+<script src="assets/js/motion.js?v=1.0.13" defer></script>
 </body>
 </html>

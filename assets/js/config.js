@@ -56,6 +56,18 @@ window.YADEA_CONFIG = {
   },
   telefone: '+55 15 99773-4474',
 
+  /* Formas de pagamento da loja. O FAQ ("Quais são as formas de pagamento")
+     responde exatamente esta lista, nada além. Confirmado pela loja em
+     11/11/2026: só Pix, parcelamento no cartão de crédito e financiamento.
+     `naoAceitas`: o build (gerar-seo.js) para se alguma delas aparecer em
+     qualquer página ou no llms.txt. O site antigo citava consórcio e
+     carteira digital, e o cliente reclamou. Nova unidade: confirmar a lista
+     com a loja antes de publicar. */
+  pagamento: {
+    formas: ['Pix', 'parcelamento no cartão de crédito', 'financiamento'],
+    naoAceitas: ['consórcio', 'carteira digital'],
+  },
+
   endereco: {
     logradouro: 'R. Avelino Argento, 139',
     complemento: '',
@@ -92,6 +104,33 @@ window.YADEA_CONFIG = {
   redes: {
     instagram: '',
     instagramUsuario: '',
+  },
+
+  /* ── Medição: nomes de evento herdados do WordPress ───────────────────
+     Sorocaba mede SEM GTM: gtag direto no GA4 e no Google Ads (IDs no <html>
+     dos moldes: data-ga4, data-aw). O WordPress mandava cada clique pelo
+     PixelYourSite com um nome próprio, aos DOIS destinos e sem rótulo de
+     conversão (lido do HTML em 07/11/2026). Conversão do Ads importada do
+     GA4, público de remarketing ou relatório pode depender desses nomes, então
+     o tracking.js manda o nome antigo junto com o `generate_lead` de cada
+     clique no WhatsApp (só ao Google: nem Meta nem servidor).
+     `porOrigem`: o `data-origem` do link → nome antigo. Clique de modelo sem
+     nome na lista vira `prefixoModelo` + nome do modelo, como era
+     (BTN_modelo_Joy_Super → aqui BTN_modelo_Owin, BTN_modelo_M6_H…).
+     O WordPress também tinha LINK_telefoneVendas_Footer: o site novo não tem
+     link de telefone. Origem fora da lista (flutuante, menu, cta_final…) só
+     manda o `generate_lead`. */
+  medicao: {
+    porOrigem: {
+      hero_black: 'BTN_primeira_dobra',
+      hero_testride: 'BTN_primeira_dobra',
+      header_testride: 'BTN_barra_header_dsk',
+      depoimentos: 'BTN_depoimento',
+      faq: 'BTN_perguntas_frequentes',
+      rodape_vendas: 'LINK_whatsappVendas_Footer',
+      rodape_assistencia: 'LINK_Whatsapp_Assistencia_Footer',
+    },
+    prefixoModelo: 'BTN_modelo_',
   },
 
   /* ── Comunicado de segurança ──────────────────────────────────────────
